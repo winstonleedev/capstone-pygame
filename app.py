@@ -1,3 +1,4 @@
+import asyncio
 import math
 import os
 
@@ -14,7 +15,14 @@ LAUNCH_ORIGIN = (150, 450)
 
 def get_asset_path(filename):
     assets_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
-    return os.path.join(assets_dir, filename)
+    path = os.path.join(assets_dir, filename)
+    if not os.path.exists(path):
+        name, ext = os.path.splitext(filename)
+        for alt_name in (f"{name}-pygbag.ogg", f"{name}.ogg"):
+            alt_path = os.path.join(assets_dir, alt_name)
+            if os.path.exists(alt_path):
+                return alt_path
+    return path
 
 
 def load_assets():
@@ -23,8 +31,21 @@ def load_assets():
     pig_image = pygame.transform.smoothscale(pig_raw, BLOCK_SIZE)
     bird_image = pygame.transform.smoothscale(bird_raw, (30, 30))
 
-    flying_sound = pygame.mixer.Sound(get_asset_path("flying.mp3"))
-    hit_sound = pygame.mixer.Sound(get_asset_path("hit.mp3"))
+    flying_sound = None
+    hit_sound = None
+    try:
+        flying_path = get_asset_path("flying.mp3")
+        if os.path.exists(flying_path):
+            flying_sound = pygame.mixer.Sound(flying_path)
+    except Exception as e:
+        print(f"Warning: could not load flying sound: {e}")
+
+    try:
+        hit_path = get_asset_path("hit.mp3")
+        if os.path.exists(hit_path):
+            hit_sound = pygame.mixer.Sound(hit_path)
+    except Exception as e:
+        print(f"Warning: could not load hit sound: {e}")
 
     return {
         "bird_image": bird_image,
@@ -102,7 +123,7 @@ def build_world(space):
     return blocks
 
 
-def main():
+async def main():
     pygame.init()
     pygame.mixer.init()
 
@@ -185,9 +206,10 @@ def main():
 
         pygame.display.flip()
         clock.tick(60)
+        await asyncio.sleep(0)
 
     pygame.quit()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

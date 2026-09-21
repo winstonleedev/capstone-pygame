@@ -1,5 +1,4 @@
-from __future__ import annotations
-
+import asyncio
 import importlib.util
 from pathlib import Path
 
@@ -13,4 +12,7 @@ def main() -> None:
     module = importlib.util.module_from_spec(spec)
     assert spec is not None and spec.loader is not None
     spec.loader.exec_module(module)
-    module.main()
+    if asyncio.iscoroutinefunction(module.main):
+        asyncio.run(module.main())
+    else:
+        module.main()
