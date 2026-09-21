@@ -9,12 +9,11 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "pygame-ce>=2.5.8",
-    "pygbag>=0.9.3",
     "pymunk>=7.3.0",
 ]
 
 [project.scripts]
-game = "game:app"
+game = "game:main"
 
 [build-system]
 requires = ["uv_build>=0.12.9,<0.13.0"]
