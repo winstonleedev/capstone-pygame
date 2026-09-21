@@ -16,6 +16,13 @@ ASSETS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
 bird_raw = pygame.image.load(os.path.join(ASSETS_DIR, "bird.png")).convert_alpha()
 pig_raw = pygame.image.load(os.path.join(ASSETS_DIR, "pig.png")).convert_alpha()
 
+music_path = os.path.join(ASSETS_DIR, "music.mp3")
+flying_sound = pygame.mixer.Sound(os.path.join(ASSETS_DIR, "flying.mp3"))
+hit_sound = pygame.mixer.Sound(os.path.join(ASSETS_DIR, "hit.mp3"))
+pygame.mixer.music.load(music_path)
+pygame.mixer.music.set_volume(0.35)
+pygame.mixer.music.play(-1)
+
 # Target and Projectile lists to track bodies for rendering
 blocks = []
 projectiles = []
@@ -67,7 +74,9 @@ def launch_projectile(pos, impulse):
     space.add(body, shape)
     body.apply_impulse_at_local_point(impulse)
     projectiles.append(body)
-
+    if flying_sound is not None:
+        flying_sound.play()
+        
 # Game Loop Variables
 launch_origin = (150, 450)
 dragging = False
