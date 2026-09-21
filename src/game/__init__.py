@@ -1,2 +1,5 @@
+import app
+
+
 def main() -> None:
-    print("Hello from game!")
+    app.main()

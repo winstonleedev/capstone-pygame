@@ -10,6 +10,7 @@ requires-python = ">=3.14"
 dependencies = [
     "pygame-ce>=2.5.8",
     "pymunk>=7.3.0",
+    "pyxel>=2.9.9",
 ]
 
 [project.scripts]
